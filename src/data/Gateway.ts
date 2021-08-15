@@ -7,7 +7,6 @@ export class Gateway{
   }
 
   public fetch( endpoint: string, data: {} = {}, method: string = 'GET' ): Promise<Array<any>>{
-    console.log("fetch is called in gateway")
     const url = this.baseUrl_ + endpoint;
 
     return fetch(url, {
@@ -18,7 +17,6 @@ export class Gateway{
       mode: 'cors',
     })
     .then(response => {
-      //console.log(response)
       return response.json();
     })
   }

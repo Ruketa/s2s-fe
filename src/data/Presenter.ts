@@ -62,4 +62,43 @@ export class Presenter {
 
     return graphDataset
   }
+
+  /**
+   * トピックリストを作成
+   * 
+   * @param questionnaireDataset アンケートデータセット
+   * @return トピックリスト
+   */
+  public makeTopicList(questionnaireDataset: QuestionnaireDatasetType): {[key: string]:Array<string>} {
+    let topicList : {[key: string]: Array<string>} = {}
+    Object.keys(questionnaireDataset).forEach((key: string) => {
+      topicList[key] = new Array<string>()
+      questionnaireDataset[key].forEach(questionnaire => {
+        if(questionnaire.topic !== "nan" && questionnaire.topic !== ""){
+          topicList[key].push(questionnaire.topic)
+        }
+      });
+    });
+    return topicList
+  }
+
+  /**
+   * コメントリストを作成
+   * 
+   * @param questionnaireDataset アンケートデータセット
+   * @return コメントリスト
+   */
+  public makeCommentList(questionnaireDataset: QuestionnaireDatasetType): {[key: string]:Array<string>} {
+    let commentList : {[key: string]: Array<string>} = {}
+    Object.keys(questionnaireDataset).forEach((key: string) => {
+      commentList[key] = new Array<string>()
+      questionnaireDataset[key].forEach(questionnaire => {
+        if(questionnaire.freeComment !== "nan" && questionnaire.freeComment !== ""){
+          commentList[key].push(questionnaire.freeComment)
+        }
+      });
+    });
+    return commentList
+  }
+
 }

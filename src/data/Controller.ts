@@ -25,9 +25,6 @@ export class Controller{
    * @return グラフ表示用データセット
    */
   public fetchQuestionnaireDataAll(): Promise<GraphDataset> {
-
-    console.log("fetchQuestionnaireDataAll in Controller is called");
-
     return this.dataloader_.fetchQuestionnaireDataAll(true)
       .then( (questionnaireDataset: QuestionnaireDataset) => {
         const graphDataset = this.presenter_.makeGraphDataset(questionnaireDataset.getAll())
@@ -41,7 +38,6 @@ export class Controller{
    * @return グラフ表示用データセット
    */
   public fetchQuestionnaireData(holding_num: number): Promise<GraphDataset> {
-    console.log("fetchQuestionnaireData in Controller is called");
     // うーん。。。いまいち。。。
     return this.dataloader_.fetchQuestionnaireData(holding_num)
       .then( (questionnaires: Array<Questionnaire>) => {
@@ -53,6 +49,33 @@ export class Controller{
         return graphDataset;
       });
   }
+
+  /**
+   * アンケートデータ(トピック情報)を取得
+   * 
+   * @return トピック情報
+   */
+  public fetchTopicInfo(): Promise<{[key: string]: Array<string>}> {
+    return this.dataloader_.fetchQuestionnaireDataAll(true)
+      .then( (questionnaireDataset: QuestionnaireDataset) => {
+        const topics = this.presenter_.makeTopicList(questionnaireDataset.getAll())
+        return topics;
+      });
+  }
+
+  /**
+   * アンケートデータ(コメント情報)を取得
+   * 
+   * @return コメント情報
+   */
+  public fetchFreeCommentInfo(): Promise<{[key: string]: Array<string>}> {
+    return this.dataloader_.fetchQuestionnaireDataAll(true)
+      .then( (questionnaireDataset: QuestionnaireDataset) => {
+        const comments = this.presenter_.makeCommentList(questionnaireDataset.getAll())
+        return comments;
+      });
+  }
+
 
   /**
    * 最新の開催回番号を取得

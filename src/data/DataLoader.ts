@@ -16,8 +16,6 @@ export class DataLoader {
    * アンケートデータを全て取得する
    */
   public fetchQuestionnaireDataAll(noCache: boolean = false): Promise<QuestionnaireDataset> {
-    console.log("fetchQuestionnaireDataAll is called");
-
     // return cache
     if ( !noCache && this.questionnaireDataCache_ ) {
       return Promise.resolve( this.questionnaireDataCache_ );
@@ -26,7 +24,6 @@ export class DataLoader {
     // fetch data
     return this.gateway_.fetch("/api/questionnaire/0")
       .then( (response: any) => {
-        //console.log(response);
         const dataset = new QuestionnaireDataset();
         // アンケートデータセットの作成
         response.forEach( (item: any) => {
@@ -53,10 +50,8 @@ export class DataLoader {
    * @return アンケートデータ
    */
   public fetchQuestionnaireData(holding_num: number): Promise<Array<Questionnaire>> {
-    console.log("fetchQuestionnaireData is called");
     return this.gateway_.fetch("/api/questionnaire/" + holding_num)
       .then( (response: any) => {
-        //console.log(response);
         let questionnaires = new Array<Questionnaire>();
         // アンケートデータセットの作成
         response.forEach( (item: any) => {
@@ -80,7 +75,6 @@ export class DataLoader {
    * @return 開催回
    */
   public getLatestHoldingNum(): Promise<number> {
-    console.log("getLatestHoldingNum is called");
     return this.fetchQuestionnaireDataAll()
       .then( (dataset: QuestionnaireDataset) => {
         return dataset.getLatestHoldingNum();
