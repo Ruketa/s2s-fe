@@ -1,14 +1,10 @@
 import React from 'react';
 import BarGraph from '../componets/BarGraph';
-import { Gateway } from '../controller/Gateway';
-import { DataLoader }  from '../controller/DataLoader';
+import { GraphDataset } from '../data/Presenter'
+import { Controller } from '../data/Controller';
 
 interface IState {
-  datasets : {[key: string]: Array<{
-    data: Array<number>;
-    backgroundColor: string;
-    label: string;
-  }>} ,
+  datasets : GraphDataset,
   holdings : Array<number>;
 }
 
@@ -16,40 +12,17 @@ class Home extends React.Component<{}, IState> {
 
   private labels !: Array<Array<string>>;
 
-  private dataloader !: DataLoader;
+  private controller_ !: Controller;
 
-  private initialize_graphdata(): any{
-
-    const eval_init = [0, 0, 0, 0, 0]
-
-    return {
-      'satisfaction': [{
-        data: Array.from(eval_init),
-        backgroundColor: "rgba(10, 144, 255, 1)",
-        label: '満足度',
-      }],
-      'recommendation':[{
-        data: Array.from(eval_init),
-        backgroundColor: "rgba(10, 144, 255, 1)",
-        label: 'おススメ度',
-      }],
-      'participation':[{
-        data: Array.from(eval_init),
-        backgroundColor: "rgba(10, 144, 255, 1)",
-        label: 'また参加したい度',
-      }],
-      'presentation':[{
-        data: Array.from(eval_init),
-        backgroundColor: "rgba(10, 144, 255, 1)",
-        label: '発表したい度',
-      }],
-    }
-  }
-
+  /**
+   * コンストラクタ
+   * 
+   * @param props
+   */
   constructor(props: any) {
     super(props);
 
-    this.dataloader = new DataLoader(new Gateway("http://localhost", 8000, 1000));
+    this.controller_ = new Controller();
 
     this.labels = [
       ["", "1"],
@@ -60,53 +33,50 @@ class Home extends React.Component<{}, IState> {
     ]
 
     this.state = {
-      datasets : this.initialize_graphdata(),
+      datasets : {},//this.initialize_graphdata(),
       holdings : new Array<number>()
     };
+
+    this.onChangeSelection = this.onChangeSelection.bind(this)
   }
 
-  public componentDidMount() {
+  /**
+   * マウント完了後のコールバック
+   */
+  componentDidMount() {
 
     console.log("LoadGraphData is called")
 
-    this.dataloader.fetchQuestionnaireDataAll().then(questionnaires => {
-      let new_datasets = this.initialize_graphdata();
-      questionnaires.forEach(q_data => {
-        new_datasets["satisfaction"][0]["data"][q_data["satisfaction_level"]-1] += 1;
-        new_datasets["recommendation"][0]["data"][q_data["recommendation_level"]-1] += 1;
-        new_datasets["participation"][0]["data"][q_data["participation_level"]-1] += 1;
-        new_datasets["presentation"][0]["data"][q_data["presentation_level"]-1] += 1;
+    this.controller_.fetchQuestionnaireDataAll()
+      .then((questionnaireGraphDataset: GraphDataset) => {
+        //console.log(questionnaireGraphDataset)
+        this.setState({ datasets: questionnaireGraphDataset });
       });
 
-      let hgs = new Array<number>();
-      const holding_num = questionnaires.slice(-1)[0]["holding_num"]
-      for(let i = 0; i <= holding_num; i++){
-        hgs.push(i);
-      }
-
-      this.setState({
-        datasets: new_datasets,
-        holdings: hgs
+    this.controller_.getLatestHoldingNum()
+      .then((latestHoldingNum: number) => {
+        let holdings = new Array<number>();
+        for(let i = 0; i <= latestHoldingNum; i++){
+          holdings.push(i);
+        }
+        this.setState({ holdings: holdings });
       });
-    });
   }
 
-  public onChangeSelection(e: any) : void {
+  /**
+   * セレクション変更のイベントハンドラ
+   * 
+   * @param e イベント
+   */
+  onChangeSelection(e: any) : void {
     const holding_num = e.target.value
-    console.log("onChangeSelection is called")
-    this.dataloader.fetchQuestionnaireData(holding_num).then(questionnaires => {
-      let new_datasets = this.initialize_graphdata();
-      questionnaires.forEach(q_data => {
-        new_datasets["satisfaction"][0]["data"][q_data["satisfaction_level"]-1] += 1;
-        new_datasets["recommendation"][0]["data"][q_data["recommendation_level"]-1] += 1;
-        new_datasets["participation"][0]["data"][q_data["participation_level"]-1] += 1;
-        new_datasets["presentation"][0]["data"][q_data["presentation_level"]-1] += 1;
-      });
+    console.log("onChangeSelection in Home is called")
 
-      this.setState({
-        datasets: new_datasets,
+    this.controller_.fetchQuestionnaireData(holding_num)
+      .then((questionnaireGraphDataset: GraphDataset) => {
+        console.log(questionnaireGraphDataset)
+        this.setState({ datasets: questionnaireGraphDataset });
       });
-    });
   }
 
   render() {
