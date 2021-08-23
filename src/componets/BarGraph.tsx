@@ -13,11 +13,11 @@ class BarGraph extends React.Component<IGraphProps, {}>{
   render(){
 
     return (
-      <div>
+      <>
         <div>
           <Bar data={this.props.graphData} />
         </div>
-      </div>
+      </>
    );
 
   }

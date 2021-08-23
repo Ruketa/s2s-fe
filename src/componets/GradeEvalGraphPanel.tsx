@@ -88,7 +88,7 @@ class GradeEvalGraphPanel  extends React.Component<IGradeEvalGraphPanelProps, IG
   render(){
 
     return (
-      <div>
+      <>
         <div>
           開催回 :　 
           <span>
@@ -115,7 +115,7 @@ class GradeEvalGraphPanel  extends React.Component<IGradeEvalGraphPanelProps, IG
             </>
           );
         })}
-      </div>
+      </>
    );
 
   }
