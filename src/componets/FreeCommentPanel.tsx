@@ -48,7 +48,7 @@ class FreeCommentPanel extends React.Component<{}, IFreeCommentPanelState> {
 
   render() {
     return (
-      <div>
+      <>
         <TableContainer component={Paper}>
           <Table area-label="free comment table">
             <TableHead>
@@ -74,7 +74,7 @@ class FreeCommentPanel extends React.Component<{}, IFreeCommentPanelState> {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </>
     );
   }
 }

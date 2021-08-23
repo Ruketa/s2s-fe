@@ -49,7 +49,7 @@ class TopicsPanel extends React.Component<{}, ITopicsPanelState> {
 
   render() {
     return (
-      <div>
+      <>
         <TableContainer component={Paper}>
           <Table area-label="topics table">
             <TableHead>
@@ -75,7 +75,7 @@ class TopicsPanel extends React.Component<{}, ITopicsPanelState> {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </>
     );
   }
 }

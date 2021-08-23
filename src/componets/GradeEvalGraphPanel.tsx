@@ -23,6 +23,14 @@ class GradeEvalGraphPanel  extends React.Component<IGradeEvalGraphPanelProps, IG
     ["", "5"],
   ]
 
+  private readonly barGraphList = 
+    [
+      {question: "勉強会の満足度を教えてください", datasets: "satisfaction"},
+      {question: "他の人にも今回の発表内容を紹介したいと思いますか？", datasets: "recommendation"},
+      {question: "また参加したいと思いましたか？", datasets: "participation"},
+      {question: "発表してみたいと思いましたか？", datasets: "presentation"},
+    ]
+
   private controller_ !: Controller;
 
   /**
@@ -80,7 +88,7 @@ class GradeEvalGraphPanel  extends React.Component<IGradeEvalGraphPanelProps, IG
   render(){
 
     return (
-      <div>
+      <>
         <div>
           開催回 :　 
           <span>
@@ -96,24 +104,18 @@ class GradeEvalGraphPanel  extends React.Component<IGradeEvalGraphPanelProps, IG
               }
             </select>
           </span>
-        </div>
-        <div>
-          <h2>勉強会の満足度を教えてください</h2>
-          <BarGraph graphData={{labels: this.labels, datasets: this.state.datasets["satisfaction"]}} />
-        </div>
-        <div>
-          <h2>他の人にも今回の発表内容を紹介したいと思いますか？</h2>
-          <BarGraph graphData={{labels: this.labels, datasets: this.state.datasets["recommendation"]}} />
-        </div>
-        <div>
-          <h2>また参加したいと思いましたか？</h2>
-          <BarGraph graphData={{labels: this.labels, datasets: this.state.datasets["participation"]}} />
-        </div>
-        <div>
-          <h2>発表してみたいと思いましたか？</h2>
-          <BarGraph graphData={{labels: this.labels, datasets: this.state.datasets["presentation"]}} />
-        </div>
-      </div>
+        </div>   
+        {this.barGraphList.map(barGraphItem => {
+          return (
+            <>
+              <div>
+                <h2>{barGraphItem.question}</h2>
+                <BarGraph graphData={{ labels: this.labels, datasets: this.state.datasets[`${barGraphItem.datasets}`], }} />
+              </div>
+            </>
+          );
+        })}
+      </>
    );
 
   }
