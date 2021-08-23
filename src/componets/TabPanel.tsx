@@ -1,5 +1,5 @@
-import React from 'react';
-import Box from '@material-ui/core/Box'
+import React from "react";
+import Box from "@material-ui/core/Box";
 
 interface ITabPanelProps {
   children: any;
@@ -7,22 +7,12 @@ interface ITabPanelProps {
   index: number;
 }
 
-class TabPanel extends React.Component<ITabPanelProps, []> {
-
-  render() {
-    return (
-      <div 
-        role="tabpanel"
-        hidden = {this.props.value !== this.props.index}
-      >
-        {this.props.value === this.props.index &&(
-          <Box p={3}>
-            {this.props.children}
-          </Box>
-        )}
-      </div>
-    );
-  }
-}
+const TabPanel = (props: ITabPanelProps) => {
+  return (
+    <div role="tabpanel" hidden={props.value !== props.index}>
+      {props.value === props.index && <Box p={3}>{props.children}</Box>}
+    </div>
+  );
+};
 
 export default TabPanel;
