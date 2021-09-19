@@ -11,6 +11,7 @@ interface IGradeEvalGraphPanelProps {}
 interface IGradeEvalGraphPanelState {
   datasets: GraphDataset;
   holdings: Array<number>;
+  presentation: Array<Presentation>;
 }
 
 class GradeEvalGraphPanel extends React.Component<
@@ -50,6 +51,7 @@ class GradeEvalGraphPanel extends React.Component<
     this.state = {
       datasets: {},
       holdings: new Array<number>(),
+      presentation: Array<Presentation>(),
     };
 
     this.onChangeSelection = this.onChangeSelection.bind(this);
@@ -92,7 +94,7 @@ class GradeEvalGraphPanel extends React.Component<
     // 発表者情報
     this.controller_.fetchPresenterInfo(holding_num)
       .then((presenterInfo: Array<Presentation>) => {
-        console.log(presenterInfo);
+        this.setState({ presentation: presenterInfo });
       })
   }
 
@@ -106,24 +108,48 @@ class GradeEvalGraphPanel extends React.Component<
     flexDirection: "column",
     fontSize: "small",
   };
+  presentationContainerStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  };
+  presentationContainerItemStyle: React.CSSProperties = {
+    display: "flex",
+    marginLeft: "10px",
+    marginRight: "10px",
+  };
+
 
   render() {
     return (
       <>
         <div>
-          開催回 :　
-          <span>
-            <select onChange={this.onChangeSelection}>
-              {this.state.holdings.map((holding_num, index) => {
-                let item_label = holding_num === 0 ? "全て" : holding_num.toString()
-                return (
-                  <option value={holding_num} key={index}>
-                    {item_label}
-                  </option>
-                );
-              })}
-            </select>
-          </span>
+          <div>
+            開催回 :
+            <span>
+              <select onChange={this.onChangeSelection}>
+                {this.state.holdings.map((holding_num, index) => {
+                  let item_label = holding_num === 0 ? "全て" : holding_num.toString()
+                  return (
+                    <option value={holding_num} key={index}>
+                      {item_label}
+                    </option>
+                  );
+                })}
+              </select>
+            </span>
+          </div>
+          <div>
+            {this.state.presentation.map((presentation, index) => {
+              return (
+                <div style={this.presentationContainerStyle} key={index}>
+                  <p style={this.presentationContainerItemStyle}>発表者：{presentation.name}</p>
+                  <p style={this.presentationContainerItemStyle}>所属：{presentation.division}</p>
+                  <p style={this.presentationContainerItemStyle}>発表タイトル：{presentation.presentationTitle}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div style={this.flexBoxStyle}>
           {this.barGraphList.map((barGraphItem, index) => {

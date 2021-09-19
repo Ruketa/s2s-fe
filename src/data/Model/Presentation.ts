@@ -37,7 +37,7 @@ export class Presentation {
    * @return 所属
    */
   get division(): string {
-    return this.division;
+    return this.division_;
   }
 
   /**
@@ -45,7 +45,7 @@ export class Presentation {
    * @return プレゼンテーションタイトル
    */
   get presentationTitle(): string {
-    return this.presentationTitle;
+    return this.presentationTitle_;
   }
 
 }

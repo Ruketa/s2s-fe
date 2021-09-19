@@ -92,7 +92,7 @@ export class Controller{
    * 
    * @return 発表者情報
    */
-  public fetchPresenterInfo(holding_num : number): Promise<Array<Presentation>> {
+  public fetchPresenterInfo(holding_num: number): Promise<Array<Presentation>> {
     return this.dataloader_.fetchPresenterInfo(holding_num);
   }
 }
