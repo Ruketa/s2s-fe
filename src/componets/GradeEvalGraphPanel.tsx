@@ -63,7 +63,7 @@ class GradeEvalGraphPanel extends React.Component<
   componentDidMount() {
     // アンケート情報
     this.controller_
-      .fetchQuestionnaireDataAll()
+      .fetchQuestionnaireData(0)
       .then((questionnaireGraphDataset: GraphDataset) => {
         this.setState({ datasets: questionnaireGraphDataset });
       });
@@ -83,7 +83,7 @@ class GradeEvalGraphPanel extends React.Component<
    * @param e イベント
    */
   onChangeSelection(e: any): void {
-    const holding_num = e.target.value;
+    const holding_num = Number(e.target.value);
 
     this.controller_
       .fetchQuestionnaireData(holding_num)
@@ -92,10 +92,15 @@ class GradeEvalGraphPanel extends React.Component<
       });
 
     // 発表者情報
-    this.controller_.fetchPresenterInfo(holding_num)
-      .then((presenterInfo: Array<Presentation>) => {
-        this.setState({ presentation: presenterInfo });
-      })
+    if (holding_num > 0) {
+      this.controller_.fetchPresenterInfo(holding_num)
+        .then((presenterInfo: Array<Presentation>) => {
+          this.setState({ presentation: presenterInfo });
+        })
+    }
+    else{
+      this.setState({ presentation: Array<Presentation>() });
+    }
   }
 
   flexBoxStyle: React.CSSProperties = {
@@ -118,7 +123,6 @@ class GradeEvalGraphPanel extends React.Component<
     marginLeft: "10px",
     marginRight: "10px",
   };
-
 
   render() {
     return (
@@ -143,9 +147,9 @@ class GradeEvalGraphPanel extends React.Component<
             {this.state.presentation.map((presentation, index) => {
               return (
                 <div style={this.presentationContainerStyle} key={index}>
-                  <p style={this.presentationContainerItemStyle}>発表者：{presentation.name}</p>
-                  <p style={this.presentationContainerItemStyle}>所属：{presentation.division}</p>
-                  <p style={this.presentationContainerItemStyle}>発表タイトル：{presentation.presentationTitle}</p>
+                  <p style={this.presentationContainerItemStyle} key={"p-name-"+index} >発表者：{presentation.name}</p>
+                  <p style={this.presentationContainerItemStyle} key={"p-division-"+index}>所属：{presentation.division}</p>
+                  <p style={this.presentationContainerItemStyle} key={"p-title-"+index}>発表タイトル：{presentation.presentationTitle}</p>
                 </div>
               );
             })}
@@ -154,20 +158,18 @@ class GradeEvalGraphPanel extends React.Component<
         <div style={this.flexBoxStyle}>
           {this.barGraphList.map((barGraphItem, index) => {
             return (
-              <>
-                <div style={this.flexItemStyle} key={"bargraph-div-" + index}>
-                  <h2 style={{ marginBottom: "auto" }} key={"bargraph-title-" + index}>
-                    {barGraphItem.question}
-                  </h2>
-                  <BarGraph
-                    graphData={{
-                      labels: this.labels,
-                      datasets: this.state.datasets[`${barGraphItem.datasets}`],
-                    }}
-                    key={"bargraph-" + { index }}
-                  />
-                </div>
-              </>
+              <div style={this.flexItemStyle} key={"bargraph-div-" + index}>
+                <h2 style={{ marginBottom: "auto" }} key={"bargraph-title-" + index}>
+                  {barGraphItem.question}
+                </h2>
+                <BarGraph
+                  graphData={{
+                    labels: this.labels,
+                    datasets: this.state.datasets[`${barGraphItem.datasets}`],
+                  }}
+                  key={"bargraph-" + { index }}
+                />
+              </div>
             );
           })}
         </div>

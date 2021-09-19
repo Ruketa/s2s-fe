@@ -1,6 +1,5 @@
 import { DataLoader } from "./DataLoader";
 import { Gateway } from "./Gateway";
-import { Questionnaire } from "./Model/Questionnaire";
 import { QuestionnaireDataset } from "./Model/QuestionnaireDataset";
 import { GraphDataset, Presenter } from "./Presenter";
 import { Presentation } from "./Model/Presentation";
@@ -21,31 +20,13 @@ export class Controller{
   }
 
   /**
-   * アンケートデータを全て取得
-   * 
-   * @return グラフ表示用データセット
-   */
-  public fetchQuestionnaireDataAll(): Promise<GraphDataset> {
-    return this.dataloader_.fetchQuestionnaireDataAll(true)
-      .then( (questionnaireDataset: QuestionnaireDataset) => {
-        const graphDataset = this.presenter_.makeGraphDataset(questionnaireDataset.getAll())
-        return graphDataset;
-      });
-  }
-
-  /**
    * アンケートデータを取得
    * 
    * @return グラフ表示用データセット
    */
   public fetchQuestionnaireData(holding_num: number): Promise<GraphDataset> {
-    // うーん。。。いまいち。。。
     return this.dataloader_.fetchQuestionnaireData(holding_num)
-      .then( (questionnaires: Array<Questionnaire>) => {
-        const questionnaireDataset = new QuestionnaireDataset();
-        questionnaires.forEach( (questionnaire: Questionnaire) => {
-          questionnaireDataset.add(holding_num, questionnaire);
-        });
+      .then( (questionnaireDataset: QuestionnaireDataset) => {
         const graphDataset = this.presenter_.makeGraphDataset(questionnaireDataset.getAll());
         return graphDataset;
       });
@@ -57,7 +38,7 @@ export class Controller{
    * @return トピック情報
    */
   public fetchTopicInfo(): Promise<{[key: string]: Array<string>}> {
-    return this.dataloader_.fetchQuestionnaireDataAll(true)
+    return this.dataloader_.fetchQuestionnaireData(0)
       .then( (questionnaireDataset: QuestionnaireDataset) => {
         const topics = this.presenter_.makeTopicList(questionnaireDataset.getAll())
         return topics;
@@ -70,7 +51,7 @@ export class Controller{
    * @return コメント情報
    */
   public fetchFreeCommentInfo(): Promise<{[key: string]: Array<string>}> {
-    return this.dataloader_.fetchQuestionnaireDataAll(true)
+    return this.dataloader_.fetchQuestionnaireData(0)
       .then( (questionnaireDataset: QuestionnaireDataset) => {
         const comments = this.presenter_.makeCommentList(questionnaireDataset.getAll())
         return comments;
