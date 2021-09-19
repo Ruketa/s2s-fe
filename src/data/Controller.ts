@@ -3,6 +3,7 @@ import { Gateway } from "./Gateway";
 import { Questionnaire } from "./Model/Questionnaire";
 import { QuestionnaireDataset } from "./Model/QuestionnaireDataset";
 import { GraphDataset, Presenter } from "./Presenter";
+import { Presentation } from "./Model/Presentation";
 
 export class Controller{
 
@@ -84,5 +85,14 @@ export class Controller{
    */
   public getLatestHoldingNum(): Promise<number> {
     return this.dataloader_.getLatestHoldingNum();
+  }
+
+  /**
+   * 発表者情報を種痘
+   * 
+   * @return 発表者情報
+   */
+  public fetchPresenterInfo(holding_num : number): Promise<Array<Presentation>> {
+    return this.dataloader_.fetchPresenterInfo(holding_num);
   }
 }

@@ -2,8 +2,11 @@ export class Gateway{
 
   private baseUrl_ !: string;
 
+  private timeout_ !: number;
+
   constructor( url: string, port: number, timeout: number,){
     this.baseUrl_ = url + ':' + port;
+    this.timeout_ = timeout;
   }
 
   public fetch( endpoint: string, data: {} = {}, method: string = 'GET' ): Promise<Array<any>>{

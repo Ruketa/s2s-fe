@@ -4,6 +4,7 @@ import BarGraph from "./BarGraph";
 
 import { Controller } from "../data/Controller";
 import { GraphDataset } from "../data/Presenter";
+import { Presentation } from '../data/Model/Presentation'
 
 interface IGradeEvalGraphPanelProps {}
 
@@ -58,6 +59,7 @@ class GradeEvalGraphPanel extends React.Component<
    * マウント完了後のコールバック
    */
   componentDidMount() {
+    // アンケート情報
     this.controller_
       .fetchQuestionnaireDataAll()
       .then((questionnaireGraphDataset: GraphDataset) => {
@@ -86,6 +88,12 @@ class GradeEvalGraphPanel extends React.Component<
       .then((questionnaireGraphDataset: GraphDataset) => {
         this.setState({ datasets: questionnaireGraphDataset });
       });
+
+    // 発表者情報
+    this.controller_.fetchPresenterInfo(holding_num)
+      .then((presenterInfo: Array<Presentation>) => {
+        console.log(presenterInfo);
+      })
   }
 
   flexBoxStyle: React.CSSProperties = {
