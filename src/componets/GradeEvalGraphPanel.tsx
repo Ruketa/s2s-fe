@@ -107,10 +107,7 @@ class GradeEvalGraphPanel extends React.Component<
           <span>
             <select onChange={this.onChangeSelection}>
               {this.state.holdings.map((holding_num, index) => {
-                let item_label = holding_num.toString();
-                if (holding_num === 0) {
-                  item_label = "全て";
-                }
+                let item_label = holding_num === 0 ? "全て" : holding_num.toString()
                 return (
                   <option value={holding_num} key={index}>
                     {item_label}
@@ -121,11 +118,11 @@ class GradeEvalGraphPanel extends React.Component<
           </span>
         </div>
         <div style={this.flexBoxStyle}>
-          {this.barGraphList.map((barGraphItem) => {
+          {this.barGraphList.map((barGraphItem, index) => {
             return (
               <>
-                <div style={this.flexItemStyle}>
-                  <h2 style={{ marginBottom: "auto" }}>
+                <div style={this.flexItemStyle} key={"bargraph-div-" + index}>
+                  <h2 style={{ marginBottom: "auto" }} key={"bargraph-title-" + index}>
                     {barGraphItem.question}
                   </h2>
                   <BarGraph
@@ -133,6 +130,7 @@ class GradeEvalGraphPanel extends React.Component<
                       labels: this.labels,
                       datasets: this.state.datasets[`${barGraphItem.datasets}`],
                     }}
+                    key={"bargraph-" + { index }}
                   />
                 </div>
               </>
