@@ -22,7 +22,7 @@ export class DataLoader {
     }
 
     // fetch data
-    return this.gateway_.fetch("/api/questionnaire/0")
+    return this.gateway_.fetch("/api/questionnaire")
       .then( (response: any) => {
         const dataset = new QuestionnaireDataset();
         // アンケートデータセットの作成
