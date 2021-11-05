@@ -7,7 +7,8 @@ export class Gateway{
   }
 
   public fetch( endpoint: string, data: {} = {}, method: string = 'GET' ): Promise<Array<any>>{
-    const url = this.baseUrl_ + endpoint;
+    const baseurl = "https://s2s-be.azurewebsites.net"
+    const url = baseurl + endpoint;
 
     return fetch(url, {
       method: method,
